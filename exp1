@@ -1,0 +1,25 @@
+clc;
+clear;
+close all;
+% 8(iii) Analysis of Region of Convergence (ROC)
+% and Its Significance in System Analysis
+% Poles of X(s) = 1/((s+2)(s+4))
+p = [-2 -4];
+% Plot poles
+figure;
+plot(real(p), imag(p), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
+hold on;
+% Mark pole locations
+xline(-2, '--b', 'Pole at -2');
+xline(-4, '--g', 'Pole at -4');
+% Graph settings
+grid on;
+xlabel('Real(s)');
+ylabel('Imag(s)');
+title('Poles and Candidate Regions of Convergence');
+legend('Poles', 'Location', 'best');
+xlim([-6 1]);
+ylim([-2 2]);
+% Display ROC information
+fprintf('Poles are at s = -2 and s = -4.\n');
+fprintf('For a right-sided si
