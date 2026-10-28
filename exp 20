@@ -1,0 +1,36 @@
+```matlab
+clc; clear; close all;
+
+Fs = 1000;
+t = 0:1/Fs:2-1/Fs;
+
+% Chirp signal with 150 Hz transient
+x = chirp(t,50,t(end),300,'linear');
+idx = (t >= 0.8) & (t <= 1.0);
+x(idx) = x(idx) + 0.8*sin(2*pi*150*t(idx));
+
+% STFT / Spectrogram
+win = hann(128,'periodic');
+noverlap = 112;
+nfft = 512;
+[S,F,Tstft] = spectrogram(x,win,noverlap,nfft,Fs);
+
+% Plot results
+figure('Name','Experiment 20: STFT and Wavelet Analysis');
+
+subplot(3,1,1);
+plot(t,x);
+grid on;
+xlabel('Time (s)');
+ylabel('Amplitude');
+title('Input: Chirp with 150 Hz transient');
+
+subplot(3,1,2);
+imagesc(Tstft,F,20*log10(abs(S)+eps));
+axis xy;
+xlabel('Time (s)');
+ylabel('Frequency (Hz)');
+title('STFT Magnitude Spectrogram');
+colorbar;
+ylim([0 400]);
+```
