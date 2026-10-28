@@ -1,0 +1,58 @@
+```matlab
+clc;
+clear;
+close all;
+
+fm = 50;
+T = 0.06;
+dt = 1e-5;
+t = 0:dt:T;
+x = cos(2*pi*fm*t);
+
+fs_list = [0.5*fm, fm, 2*fm, 5*fm, 10*fm];
+
+labels = {'fs = 0.5 fm (aliased)', ...
+          'fs = fm (under-sampled)', ...
+          'fs = 2 fm (Nyquist rate)', ...
+          'fs = 5 fm (over-sampled)', ...
+          'fs = 10 fm (over-sampled)'};
+
+% Sampling at different rates
+figure('Name','Sampling at Different Rates');
+
+for k = 1:length(fs_list)
+    fs = fs_list(k);
+    n = 0:1/fs:T;
+    xn = cos(2*pi*fm*n);
+
+    subplot(length(fs_list),1,k);
+    plot(t,x,'b','LineWidth',1);
+    hold on;
+    stem(n,xn,'r','filled');
+    title(labels{k});
+    xlabel('t (s)');
+    ylabel('x(t)');
+end
+
+% Sinc reconstruction and error
+fprintf('Nyquist rate (2*fm) = %.2f Hz\n',2*fm);
+err = zeros(size(fs_list));
+
+for k = 1:length(fs_list)
+    fs = fs_list(k);
+    n = 0:1/fs:T;
+    xn = cos(2*pi*fm*n);
+    x_recon = zeros(size(t));
+
+    for i = 1:length(n)
+        x_recon = x_recon + xn(i)*sinc(fs*(t-n(i)));
+    end
+
+    err(k) = mean(abs(x-x_recon));
+
+    fprintf('fs = %6.1f Hz (fs/fm = %4.1f) -> mean reconstruction error = %.5f\n', ...
+        fs,fs/fm,err(k));
+end
+
+% Reconstruction at fs = 10 fm
+```
