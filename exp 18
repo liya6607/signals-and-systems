@@ -1,0 +1,39 @@
+clc; clear; close all;
+
+% Original sequence: x[n] = (0.5)^n u[n]
+n = 0:10;
+x = (0.5).^n;
+
+% Z-transform and inverse Z-transform
+syms z k
+Xz = z/(z - 0.5);
+xInverse = iztrans(Xz, z, k);
+
+disp('Z-transform X(z) = ');
+pretty(Xz);
+disp('Inverse Z-transform (symbolic) = ');
+pretty(xInverse);
+
+% Numerical reconstruction
+xRec = (0.5).^n;
+fprintf('Maximum reconstruction error = %.3e\n', ...
+    max(abs(x - xRec)));
+fprintf('Pole = 0.5; Zero = 0; ROC: |z| > 0.5\n');
+
+% Plot original and reconstructed sequences
+figure('Name','Experiment 18: Z-transform and Inverse');
+
+subplot(2,2,1);
+stem(n, x, 'filled');
+grid on;
+xlabel('Sample index n');
+ylabel('Amplitude');
+title('Original sequence');
+
+subplot(2,2,2);
+stem(n, xRec, 'r', 'filled');
+grid on;
+xlabel('Sample index n');
+ylabel('Amplitude');
+title('Inverse Z-transform reconstruction');
+legend('Reconstructed x[n]');
