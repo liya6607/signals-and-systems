@@ -1,0 +1,77 @@
+```matlab
+clc;
+clear;
+close all;
+
+% Experiment 10: Zero-input, zero-state, impulse response and convolution
+% System: dy(t)/dt + 2y(t) = x(t)
+
+t = 0:0.01:5;
+dt = t(2)-t(1);
+
+num = [1];
+den = [1 2];
+
+disp('Transfer function: H(s) = 1/(s+2)');
+disp('Pole:');
+disp(-2);
+
+% Impulse response
+h = exp(-2*t);
+
+figure;
+plot(t,h,'LineWidth',1.5);
+grid on;
+title('Impulse Response h(t)');
+xlabel('Time (s)');
+ylabel('h(t)');
+
+% Zero-input response: y(0-) = 1
+y_zi = exp(-2*t);
+
+figure;
+plot(t,y_zi,'LineWidth',1.5);
+grid on;
+title('Zero-Input Response');
+xlabel('Time (s)');
+ylabel('y_{zi}(t)');
+
+% Unit-step input
+x = ones(size(t));
+
+% Zero-state response
+y_zs = 0.5*(1-exp(-2*t));
+
+figure;
+plot(t,x,'--',t,y_zs,'LineWidth',1.5);
+grid on;
+legend('Input x(t)','Output y_{zs}(t)','Location','best');
+title('Unit-Step Input and Zero-State Output');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+% Numerical convolution
+y_conv_full = conv(x,h)*dt;
+y_conv = y_conv_full(1:length(t));
+y_conv = y_conv - 0.5*dt*(x(1)*h + x*h(1));
+
+% Total response
+y_total = y_zi + y_zs;
+
+figure;
+plot(t,y_zi,t,y_zs,t,y_total,'LineWidth',1.3);
+grid on;
+legend('Zero-input','Zero-state','Total response','Location','best');
+title('Comparison of Response Components');
+xlabel('Time (s)');
+ylabel('Response');
+
+% Convolution verification
+figure;
+plot(t,y_conv,'--',t,y_zs,'-','LineWidth',1.5);
+grid on;
+legend('Convolution output','Theoretical output','Location','best');
+title('Convolution Verification');
+xlabel('Time (s)');
+ylabel('y_{zs}(t)');
+```
